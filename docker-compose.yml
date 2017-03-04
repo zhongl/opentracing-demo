@@ -1,0 +1,60 @@
+version: '2'
+services:
+
+  zipkin:
+    image: zhongl/opentracing-demo-zipkin
+    container_name: zipkin
+    entrypoint: ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    ports:
+     - 9411:9411
+
+  service1:
+    image: zhongl/opentracing-demo-service
+    container_name: service1
+    links:
+     - zipkin
+     - service2
+     - service3
+    entrypoint: ["java","-Dserver.port=8081","-Djava.security.egd=file:/dev/./urandom","-Deaseagent.log.conf=/easeagent/log4j2.xml","-javaagent:/easeagent/easeagent-ot.jar=/easeagent/application.conf","-jar","/app.jar"]
+    ports:
+     - 8081:8081
+    volumes:
+     - ./easeagent:/easeagent
+
+  service2:
+    image: zhongl/opentracing-demo-service
+    container_name: service2
+    links:
+     - zipkin
+     - service3
+    entrypoint: ["java","-Dserver.port=8082","-Djava.security.egd=file:/dev/./urandom","-Deaseagent.log.conf=/easeagent/log4j2.xml","-javaagent:/easeagent/easeagent-ot.jar=/easeagent/application.conf","-jar","/app.jar"]
+    ports:
+     - 8082:8082
+    volumes:
+     - ./easeagent:/easeagent
+
+  service3:
+    image: zhongl/opentracing-demo-service
+    container_name: service3
+    links:
+     - zipkin
+    entrypoint: ["java","-Dserver.port=8083","-Djava.security.egd=file:/dev/./urandom","-Deaseagent.log.conf=/easeagent/log4j2.xml","-javaagent:/easeagent/easeagent-ot.jar=/easeagent/application.conf","-jar","/app.jar"]
+    ports:
+     - 8083:8083
+    volumes:
+     - ./easeagent:/easeagent
+
+
+  gateway:
+    image: zhongl/opentracing-demo-service
+    container_name: gateway
+    links:
+     - zipkin
+     - service1
+     - service2
+     - service3
+    entrypoint: ["java","-Djava.security.egd=file:/dev/./urandom","-Deaseagent.log.conf=/easeagent/log4j2.xml","-javaagent:/easeagent/easeagent-ot.jar=/easeagent/application.conf","-jar","/app.jar"]
+    ports:
+     - 8080:8080
+    volumes:
+     - ./easeagent:/easeagent
