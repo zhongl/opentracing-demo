@@ -15,6 +15,8 @@ services:
      - zipkin
      - service2
      - service3
+    environment:
+     - SERVICE_NAME=service1
     entrypoint: ["java","-Dserver.port=8081","-Djava.security.egd=file:/dev/./urandom","-Deaseagent.log.conf=/easeagent/log4j2.xml","-javaagent:/easeagent/easeagent-ot.jar=/easeagent/application.conf","-jar","/app.jar"]
     ports:
      - 8081:8081
@@ -27,6 +29,8 @@ services:
     links:
      - zipkin
      - service3
+    environment:
+     - SERVICE_NAME=service2
     entrypoint: ["java","-Dserver.port=8082","-Djava.security.egd=file:/dev/./urandom","-Deaseagent.log.conf=/easeagent/log4j2.xml","-javaagent:/easeagent/easeagent-ot.jar=/easeagent/application.conf","-jar","/app.jar"]
     ports:
      - 8082:8082
@@ -38,6 +42,8 @@ services:
     container_name: service3
     links:
      - zipkin
+    environment:
+     - SERVICE_NAME=service3
     entrypoint: ["java","-Dserver.port=8083","-Djava.security.egd=file:/dev/./urandom","-Deaseagent.log.conf=/easeagent/log4j2.xml","-javaagent:/easeagent/easeagent-ot.jar=/easeagent/application.conf","-jar","/app.jar"]
     ports:
      - 8083:8083
@@ -53,6 +59,8 @@ services:
      - service1
      - service2
      - service3
+    environment:
+     - SERVICE_NAME=gateway
     entrypoint: ["java","-Djava.security.egd=file:/dev/./urandom","-Deaseagent.log.conf=/easeagent/log4j2.xml","-javaagent:/easeagent/easeagent-ot.jar=/easeagent/application.conf","-jar","/app.jar"]
     ports:
      - 8080:8080
