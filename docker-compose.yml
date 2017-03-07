@@ -4,7 +4,7 @@ services:
   zipkin:
     image: zhongl/opentracing-demo-zipkin
     container_name: zipkin
-    entrypoint: ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+    entrypoint: ["java","-Dzipkin.storage.elasticsearch.hosts:http://172.31.22.239:9200","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
     ports:
      - 9411:9411
 
