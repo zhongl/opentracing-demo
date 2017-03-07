@@ -20,3 +20,6 @@ Open your browser with <http://localhost:8080/1,2,3> , then jump to <http://loca
 ![trace](./trace.png)
 
 ![detail](./detail.png)
+
+![dependencies](./deps.png)
+
